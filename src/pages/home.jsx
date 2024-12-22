@@ -1,9 +1,23 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { getProducts } from '../services/productService';
 import ProductCard from '../components/productCard';
 
 function Home() {
-  const products = getProducts();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const data = await getProducts();
+      setProducts(data);
+      setLoading(false);
+    };
+    fetchProducts();
+  }, []);
+
+  if (loading) {
+    return <h2 className="text-center text-2xl text-gray-600">Loading...</h2>;
+  }
 
   return (
     <div className="container mx-auto mt-8">
