@@ -1,9 +1,13 @@
-import React from 'react';
+import React from "react";
 
 function Footer() {
   return (
-    <footer className="bg-gray-800 text-white text-center p-4 mt-8">
-      <p>© 2024 E-Commerce. All rights reserved.</p>
+    <footer className="bg-gray-800 text-white py-4">
+      <div className="container mx-auto text-center">
+        <p className="text-sm">
+          © {new Date().getFullYear()} E-Commerce App. All rights reserved.
+        </p>
+      </div>
     </footer>
   );
 }
