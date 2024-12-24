@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-const API_URL = "https://fakestoreapi.com";
+const API_URL = "https://dummyjson.com";
 
 export const getProducts = async () => {
   try {
-    const response = await axios.get(`${API_URL}/products`);
+    const response = await axios.get(`${API_URL}/products`, {params: {limit:15}});
     return response.data;
   } catch (error) {
     console.error("Error fetching products:", error);

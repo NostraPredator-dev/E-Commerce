@@ -18,7 +18,7 @@ function ProductCard({ product }) {
     >
       <div className="relative w-full h-64">
         <img
-          src={product.image}
+          src={product.thumbnail}
           alt={product.title}
           className="object-contain w-full h-full max-h-64 mx-auto"
         />
