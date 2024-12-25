@@ -21,3 +21,15 @@ export const getProductById = async (id) => {
     return null;
   }
 };
+
+export const searchProducts = async (query) => {
+  try {
+    const response = await axios.get(`${API_URL}/products/search`, {
+      params: { q: query },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error searching for products:", error);
+    return [];
+  }
+};

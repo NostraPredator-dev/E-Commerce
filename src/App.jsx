@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/home";
 import Login from "./pages/login";
@@ -9,14 +9,17 @@ import PrivateRoute from "./components/privateRoute";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import Profile from "./pages/profile";
+import { set } from "mongoose";
 
 function App() {
+  const [searchTerm, setSearchTerm] = useState("");
+
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      <Header onSearch={setSearchTerm}/>
       <main className="flex-grow">
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home searchTerm={searchTerm}/>} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/profile" element={<Profile />} /> 
           <Route path="/login" element={<Login />} />
