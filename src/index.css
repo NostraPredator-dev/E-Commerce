@@ -4,5 +4,12 @@
 
 body {
     @apply bg-gray-50 text-gray-800 font-sans;
-  }
-  
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.animate-scroll {
+  scroll-behavior: smooth;
+}

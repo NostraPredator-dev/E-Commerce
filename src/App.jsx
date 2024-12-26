@@ -9,7 +9,8 @@ import PrivateRoute from "./components/privateRoute";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import Profile from "./pages/profile";
-import { set } from "mongoose";
+import SearchResults from "./pages/searchResults";
+import CategoryPage from "./pages/categoryPage";
 
 function App() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -24,6 +25,8 @@ function App() {
           <Route path="/profile" element={<Profile />} /> 
           <Route path="/login" element={<Login />} />
           <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="/search" element={<SearchResults />} />
+          <Route path="/category" element={<CategoryPage />} />
           <Route
             path="/cart"
             element={

@@ -12,6 +12,26 @@ export const getProducts = async () => {
   }
 };
 
+export const getCategories = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/products/categories`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    return [];
+  }
+};
+
+export const getProductByCategory = async (slug) => {
+  try {
+    const response = await axios.get(`${API_URL}/products/category/${slug}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return [];
+  }
+};
+
 export const getProductById = async (id) => {
   try {
     const response = await axios.get(`${API_URL}/products/${id}`);
