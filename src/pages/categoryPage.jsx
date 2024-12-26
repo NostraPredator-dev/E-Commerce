@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getProductByCategory, getProducts } from "../services/productService";
+import { getProductByCategory } from "../services/productService";
 import ProductCard from "../components/productCard";
+import ReactSlider from "react-slider";
 
 function CategoryPage() {
   const [searchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [sortOption, setSortOption] = useState("default");
+  const [priceRange, setPriceRange] = useState([0, 1000]);
 
   const categorySlug = searchParams.get("name");
 
@@ -27,6 +30,28 @@ function CategoryPage() {
     fetchCategoryProducts();
   }, [categorySlug]);
 
+  const applyFiltersAndSorting = () => {
+    let filteredProducts = [...products];
+
+    filteredProducts = filteredProducts.filter(
+      (product) =>
+        product.price >= priceRange[0] &&
+        product.price <= priceRange[1]
+    );
+
+    if (sortOption === "priceLowToHigh") {
+      filteredProducts.sort((a, b) => a.price - b.price);
+    } else if (sortOption === "priceHighToLow") {
+      filteredProducts.sort((a, b) => b.price - a.price);
+    } else if (sortOption === "rating") {
+      filteredProducts.sort((a, b) => b.rating - a.rating);
+    }
+
+    return filteredProducts;
+  };
+
+  const sortedAndFilteredProducts = applyFiltersAndSorting();
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
@@ -39,22 +64,68 @@ function CategoryPage() {
 
   return (
     <div className="bg-gradient-to-br from-blue-50 to-blue-100 min-h-screen">
-      <div className="container mx-auto py-12 px-6 lg:px-12">
-        <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-8">
-          Products in this Category
-        </h2>
-        {products.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+      <div className="container mx-auto py-12 px-6 lg:px-12 flex">
+        {/* Sidebar for Filters and Sorting */}
+        <div className="w-1/4 bg-white shadow-md p-6 rounded-lg">
+          <h3 className="text-xl font-bold mb-4">Filters</h3>
+
+          {/* Price Range Filter */}
+          <div className="mb-6">
+            <label className="block text-gray-700 font-semibold mb-2">
+              Price Range: ${priceRange[0]} - ${priceRange[1]}
+            </label>
+            <div className="w-full">
+              <ReactSlider
+                className="horizontal-slider"
+                thumbClassName="thumb"
+                trackClassName="track"
+                min={0}
+                max={1000}
+                step={10}
+                value={priceRange}
+                onChange={(value) => setPriceRange(value)}
+                pearling
+                minDistance={10}
+              />
+            </div>
           </div>
-        ) : (
-          <div className="text-center text-gray-600">
-            <h3 className="text-xl font-semibold">No Products Found</h3>
-            <p>Try exploring other categories.</p>
+
+          {/* Sorting Options */}
+          <div className="mb-6">
+            <label className="block text-gray-700 font-semibold mb-2">
+              Sort By
+            </label>
+            <select
+              className="w-full border rounded-lg p-2"
+              value={sortOption}
+              onChange={(e) => setSortOption(e.target.value)}
+            >
+              <option value="default">Default</option>
+              <option value="priceLowToHigh">Price: Low to High</option>
+              <option value="priceHighToLow">Price: High to Low</option>
+              <option value="rating">Rating</option>
+            </select>
           </div>
-        )}
+        </div>
+
+        {/* Search Results */}
+        <div className="w-3/4 ml-8">
+          <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-8">
+            Products in this Category
+          </h2>
+          {sortedAndFilteredProducts.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {sortedAndFilteredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center text-gray-600">
+              <h3 className="text-xl font-semibold">No Products Found</h3>
+              <p>Try exploring other categories.</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

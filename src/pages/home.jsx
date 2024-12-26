@@ -32,7 +32,7 @@ function Home({ searchTerm }) {
 
   useEffect(() => {
     if(searchTerm) {
-      navigate(`search?term=${searchTerm}`)
+      navigate(`search?term=${encodeURIComponent(searchTerm)}`)
     }
   }, [searchTerm]);
   

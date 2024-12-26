@@ -13,3 +13,27 @@ body {
 .animate-scroll {
   scroll-behavior: smooth;
 }
+
+.horizontal-slider {
+  width: 100%;
+  height: 4px;
+  background: #ddd;
+  border-radius: 2px;
+  position: relative;
+}
+
+.track {
+  background: #4a90e2;
+  height: 100%;
+  border-radius: 2px;
+}
+
+.thumb {
+  height: 16px;
+  width: 16px;
+  background: #4a90e2;
+  border-radius: 50%;
+  cursor: pointer;
+  position: absolute;
+  top: -6px;
+}
