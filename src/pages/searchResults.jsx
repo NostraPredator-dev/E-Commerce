@@ -4,16 +4,14 @@ import { searchProducts, getCategories } from "../services/productService";
 import ProductCard from "../components/productCard";
 import { useSearchParams } from "react-router-dom";
 
-function SearchResults() {
+function SearchResults({ searchTerm }) {
   const [searchParams] = useSearchParams();
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [sortOption, setSortOption] = useState("default");
-  const [priceRange, setPriceRange] = useState([0, 1000]); // Default price range
-
-  const searchTerm = searchParams.get("term");
+  const [priceRange, setPriceRange] = useState([0, 1000]);
 
   useEffect(() => {
     const fetchSearchData = async () => {

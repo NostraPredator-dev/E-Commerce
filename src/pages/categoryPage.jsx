@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { getProductByCategory } from "../services/productService";
 import ProductCard from "../components/productCard";
 import ReactSlider from "react-slider";
 
-function CategoryPage() {
+function CategoryPage({ searchTerm }) {
   const [searchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sortOption, setSortOption] = useState("default");
   const [priceRange, setPriceRange] = useState([0, 1000]);
+  const navigate = useNavigate();
 
   const categorySlug = searchParams.get("name");
 
@@ -29,6 +30,12 @@ function CategoryPage() {
 
     fetchCategoryProducts();
   }, [categorySlug]);
+
+  useEffect(() => {
+      if(searchTerm) {
+      navigate(`../search?term=${encodeURIComponent(searchTerm)}`)
+      }
+  }, [searchTerm]);
 
   const applyFiltersAndSorting = () => {
     let filteredProducts = [...products];

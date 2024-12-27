@@ -25,8 +25,8 @@ function App() {
           <Route path="/profile" element={<Profile />} /> 
           <Route path="/login" element={<Login />} />
           <Route path="/product/:id" element={<ProductDetails />} />
-          <Route path="/search" element={<SearchResults />} />
-          <Route path="/category" element={<CategoryPage />} />
+          <Route path="/search" element={<SearchResults searchTerm={searchTerm}/>} />
+          <Route path="/category" element={<CategoryPage searchTerm={searchTerm}/>} />
           <Route
             path="/cart"
             element={
