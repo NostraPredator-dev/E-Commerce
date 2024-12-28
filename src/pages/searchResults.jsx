@@ -2,16 +2,16 @@ import React, { useState, useEffect } from "react";
 import ReactSlider from "react-slider";
 import { searchProducts, getCategories } from "../services/productService";
 import ProductCard from "../components/productCard";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function SearchResults({ searchTerm }) {
-  const [searchParams] = useSearchParams();
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [sortOption, setSortOption] = useState("default");
   const [priceRange, setPriceRange] = useState([0, 1000]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchSearchData = async () => {
@@ -19,18 +19,14 @@ function SearchResults({ searchTerm }) {
         try {
           setLoading(true);
 
-          // Fetch products based on search term
           const productData = await searchProducts(searchTerm);
           const products = productData.products || [];
           setFilteredProducts(products);
 
-          // Extract unique categories from products
           const uniqueCategories = [...new Set(products.map((product) => product.category))];
 
-          // Fetch categories from API
           const apiCategories = await getCategories();
 
-          // Map API categories to the unique categories
           const matchedCategories = apiCategories
             .filter((apiCategory) => uniqueCategories.includes(apiCategory.slug))
             .map((apiCategory) => ({ slug: apiCategory.slug, name: apiCategory.name }));
@@ -41,6 +37,8 @@ function SearchResults({ searchTerm }) {
         } finally {
           setLoading(false);
         }
+      } else {
+        navigate('../')
       }
     };
 
@@ -58,21 +56,18 @@ function SearchResults({ searchTerm }) {
   const applyFiltersAndSorting = () => {
     let products = [...filteredProducts];
 
-    // Apply category filter
     if (selectedCategories.length > 0) {
       products = products.filter((product) =>
         selectedCategories.includes(product.category)
       );
     }
 
-    // Apply price range filter
     products = products.filter(
       (product) =>
         product.price >= priceRange[0] &&
         product.price <= priceRange[1]
     );
 
-    // Apply sorting
     if (sortOption === "priceLowToHigh") {
       products.sort((a, b) => a.price - b.price);
     } else if (sortOption === "priceHighToLow") {

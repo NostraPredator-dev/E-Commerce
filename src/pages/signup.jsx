@@ -15,7 +15,6 @@ function SignUp() {
     e.preventDefault();
     try {
       setError('');
-      // Assuming signUp now accepts additional parameters
       await signUp({ name, phone, email, password });
       navigate('/');
     } catch {

@@ -31,7 +31,7 @@ function App() {
             path="/cart"
             element={
               <PrivateRoute>
-                <Cart />
+                <Cart searchTerm={searchTerm }/>
               </PrivateRoute>
             }
           />

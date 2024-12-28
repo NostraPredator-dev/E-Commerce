@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { getProducts, searchProducts, getCategories } from "../services/productService";
+import { getProducts, getCategories } from "../services/productService";
 import ProductCard from "../components/productCard";
 import { useNavigate } from "react-router-dom";
 
