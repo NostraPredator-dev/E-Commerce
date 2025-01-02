@@ -7,12 +7,12 @@ export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
-  const { userEmail } = useAuth();
+  const { currentUser } = useAuth();
 
   const fetchCartFromBackend = async () => {
-    if (!userEmail) return;
+    if (!currentUser) return;
     try {
-      const response = await axios.get(`http://localhost:5000/api/cart/${userEmail}`);
+      const response = await axios.get(`http://localhost:5000/cart/${currentUser.email}`);
       setCart(response.data.items || []);
     } catch (error) {
       console.error("Error fetching cart from backend:", error);
@@ -20,10 +20,10 @@ export const CartProvider = ({ children }) => {
   };
 
   const saveCartToBackend = async (updatedCart) => {
-    if (!userEmail) return;
+    if (!currentUser.email) return;
     try {
-      await axios.post('http://localhost:5000/api/cart', {
-        email: userEmail,
+      await axios.post('http://localhost:5000/cart', {
+        email: currentUser.email,
         items: updatedCart,
       });
     } catch (error) {
@@ -61,7 +61,7 @@ export const CartProvider = ({ children }) => {
 
   useEffect(() => {
     fetchCartFromBackend();
-  }, [userEmail]);
+  }, [currentUser]);
 
   return (
     <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity }}>

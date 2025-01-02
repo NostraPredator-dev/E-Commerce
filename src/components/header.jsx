@@ -22,7 +22,7 @@ function Header({ onSearch }) {
       setError(null);
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/users/${currentUser.email}`
+          `http://localhost:5000/users/${currentUser.email}`
         );
         setUserData(response.data);
       } catch (err) {

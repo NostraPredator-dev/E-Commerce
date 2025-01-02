@@ -9,13 +9,11 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
-  const [userEmail, setUserEmail] = useState();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
-      setUserEmail(user?.email || '');
       setLoading(false);
     });
     return unsubscribe;
@@ -23,9 +21,8 @@ export const AuthProvider = ({ children }) => {
 
   const signUp = async ({name, phone, email, password}) => {
     createUserWithEmailAndPassword(auth, email, password);
-    setUserEmail(email);
     try {
-      const response = await axios.post('http://localhost:5000/api/users', {
+      const response = await axios.post('http://localhost:5000/users', {
         name,
         phone,
         email,
@@ -39,15 +36,13 @@ export const AuthProvider = ({ children }) => {
   }
   const logIn = (email, password) => {
     signInWithEmailAndPassword(auth, email, password);
-    setUserEmail(email);
   }
   const logOut = () => {
     signOut(auth);
-    setUserEmail("");
   }
 
   return (
-    <AuthContext.Provider value={{ currentUser, signUp, logIn, logOut, userEmail }}>
+    <AuthContext.Provider value={{ currentUser, signUp, logIn, logOut }}>
       {!loading && children}
     </AuthContext.Provider>
   );
