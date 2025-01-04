@@ -32,9 +32,9 @@ function CategoryPage({ searchTerm }) {
   }, [categorySlug]);
 
   useEffect(() => {
-      if(searchTerm) {
-      navigate(`../search?term=${encodeURIComponent(searchTerm)}`)
-      }
+    if (searchTerm) {
+      navigate(`../search?term=${encodeURIComponent(searchTerm)}`);
+    }
   }, [searchTerm]);
 
   const applyFiltersAndSorting = () => {
@@ -71,9 +71,9 @@ function CategoryPage({ searchTerm }) {
 
   return (
     <div className="bg-gradient-to-br from-blue-50 to-blue-100 min-h-screen">
-      <div className="container mx-auto py-12 px-6 lg:px-12 flex">
+      <div className="container mx-auto py-12 px-4 md:px-6 lg:px-12 flex flex-col lg:flex-row">
         {/* Sidebar for Filters and Sorting */}
-        <div className="w-1/4 bg-white shadow-md p-6 rounded-lg">
+        <div className="lg:w-1/4 bg-white shadow-md p-6 rounded-lg mb-8 lg:mb-0">
           <h3 className="text-xl font-bold mb-4">Filters</h3>
 
           {/* Price Range Filter */}
@@ -116,12 +116,12 @@ function CategoryPage({ searchTerm }) {
         </div>
 
         {/* Search Results */}
-        <div className="w-3/4 ml-8">
+        <div className="lg:w-3/4 lg:ml-8">
           <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-8">
             Products in this Category
           </h2>
           {sortedAndFilteredProducts.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
               {sortedAndFilteredProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

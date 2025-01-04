@@ -38,7 +38,7 @@ function SearchResults({ searchTerm }) {
           setLoading(false);
         }
       } else {
-        navigate('../')
+        navigate("../");
       }
     };
 
@@ -84,7 +84,7 @@ function SearchResults({ searchTerm }) {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
-        <h2 className="text-2xl font-semibold text-gray-600 animate-pulse">
+        <h2 className="text-2xl md:text-4xl font-semibold text-gray-600 animate-pulse">
           Loading...
         </h2>
       </div>
@@ -93,15 +93,15 @@ function SearchResults({ searchTerm }) {
 
   return (
     <div className="bg-gradient-to-br from-blue-50 to-blue-100 min-h-screen">
-      <div className="container mx-auto py-12 px-6 lg:px-12 flex">
-        {/* Sidebar for Filters and Sorting */}
-        <div className="w-1/4 bg-white shadow-md p-6 rounded-lg">
-          <h3 className="text-xl font-bold mb-4">Filters</h3>
+      <div className="container mx-auto py-12 px-4 lg:px-12 lg:flex">
+        {/* Sidebar for Filters */}
+        <div className="w-full lg:w-1/4 bg-white shadow-md p-6 rounded-lg mb-8 lg:mb-0 lg:mr-8">
+          <h3 className="text-xl md:text-2xl font-bold mb-6">Filters</h3>
 
           {/* Category Filter */}
-          <div className="mb-6">
-            <h4 className="text-gray-700 font-semibold mb-2">Categories</h4>
-            <div className="space-y-2">
+          <div className="mb-8">
+            <h4 className="text-lg font-semibold mb-4">Categories</h4>
+            <div className="space-y-3">
               {categories.map((category) => (
                 <div key={category.slug} className="flex items-center">
                   <input
@@ -110,9 +110,12 @@ function SearchResults({ searchTerm }) {
                     value={category.slug}
                     checked={selectedCategories.includes(category.slug)}
                     onChange={() => handleCategoryChange(category.slug)}
-                    className="mr-2"
+                    className="mr-3"
                   />
-                  <label htmlFor={`category-${category.slug}`} className="text-gray-700">
+                  <label
+                    htmlFor={`category-${category.slug}`}
+                    className="text-gray-700"
+                  >
                     {category.name}
                   </label>
                 </div>
@@ -121,33 +124,29 @@ function SearchResults({ searchTerm }) {
           </div>
 
           {/* Price Range Filter */}
-          <div className="mb-6">
-            <label className="block text-gray-700 font-semibold mb-2">
+          <div className="mb-8">
+            <label className="block text-lg font-semibold mb-4">
               Price Range: ${priceRange[0]} - ${priceRange[1]}
             </label>
-            <div className="w-full">
-                <ReactSlider
-                className="horizontal-slider"
-                thumbClassName="thumb"
-                trackClassName="track"
-                min={0}
-                max={1000}
-                step={10}
-                value={priceRange}
-                onChange={(value) => setPriceRange(value)}
-                pearling
-                minDistance={10}
-                />
-            </div>
+            <ReactSlider
+              className="horizontal-slider"
+              thumbClassName="thumb"
+              trackClassName="track"
+              min={0}
+              max={1000}
+              step={10}
+              value={priceRange}
+              onChange={(value) => setPriceRange(value)}
+              pearling
+              minDistance={10}
+            />
           </div>
 
           {/* Sorting Options */}
-          <div className="mb-6">
-            <label className="block text-gray-700 font-semibold mb-2">
-              Sort By
-            </label>
+          <div>
+            <label className="block text-lg font-semibold mb-4">Sort By</label>
             <select
-              className="w-full border rounded-lg p-2"
+              className="w-full border rounded-lg p-3"
               value={sortOption}
               onChange={(e) => setSortOption(e.target.value)}
             >
@@ -159,20 +158,22 @@ function SearchResults({ searchTerm }) {
           </div>
         </div>
 
-        {/* Search Results */}
-        <div className="w-3/4 ml-8">
-          <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-8">
+        {/* Main Content: Search Results */}
+        <div className="w-full lg:w-3/4">
+          <h2 className="text-2xl md:text-4xl font-extrabold text-gray-800 text-center mb-8">
             Search Results for "{searchTerm}"
           </h2>
           {sortedAndFilteredProducts.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {sortedAndFilteredProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
           ) : (
             <div className="text-center text-gray-600">
-              <h3 className="text-xl font-semibold">No Products Found</h3>
+              <h3 className="text-lg md:text-xl font-semibold">
+                No Products Found
+              </h3>
               <p>Try searching with a different term.</p>
             </div>
           )}

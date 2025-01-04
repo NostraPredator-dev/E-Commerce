@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getProductById } from "../services/productService";
 import axios from "axios";
 import { useCart } from "../context/cartContext";
 import { useAuth } from "../context/AuthContext";
@@ -10,7 +9,7 @@ function ProductDetails() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const { addToCart } = useCart();
-  const { currentUser } = useAuth(); // Check if currentUser is available for review form
+  const { currentUser } = useAuth();
 
   const [rating, setRating] = useState(0);
   const [reviewComment, setReviewComment] = useState("");
@@ -81,7 +80,7 @@ function ProductDetails() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto mt-8 p-4 bg-white shadow-lg rounded-lg">
+    <div className="max-w-5xl mx-auto mt-8 p-4 bg-white shadow-lg rounded-lg">
       <div className="flex flex-col md:flex-row gap-6">
         <img
           src={product.thumbnail}
@@ -89,27 +88,22 @@ function ProductDetails() {
           className="w-full md:w-1/2 object-contain rounded-lg"
         />
         <div className="flex-1">
-          <h2 className="text-3xl font-bold mb-4 text-gray-800">
-            {product.title}
-          </h2>
+          <h2 className="text-3xl font-bold mb-4 text-gray-800">{product.title}</h2>
           <p className="text-yellow-500 font-bold mb-4">
             {"★".repeat(product.rating) + "☆".repeat(5 - Math.floor(product.rating))} (
             {product.rating})
           </p>
           <p className="text-lg text-gray-600 mb-4">{product.description}</p>
-          <p className="text-xl font-semibold text-gray-800 mb-6">
-            Price: ${product.price}
-          </p>
+          <p className="text-xl font-semibold text-gray-800 mb-6">Price: ${product.price}</p>
           <button
             onClick={handleAddToCart}
-            className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded"
+            className="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded"
           >
             Add to Cart
           </button>
         </div>
       </div>
 
-      {/* Reviews Section */}
       <div className="mt-8">
         <h3 className="text-2xl font-bold text-gray-800 mb-4">Reviews</h3>
         {product.reviews && product.reviews.length > 0 ? (
@@ -128,8 +122,7 @@ function ProductDetails() {
                   </span>
                 </div>
                 <p className="text-yellow-500 font-bold mb-2">
-                  {"★".repeat(review.rating) +
-                    "☆".repeat(5 - review.rating)}
+                  {"★".repeat(review.rating) + "☆".repeat(5 - review.rating)}
                 </p>
                 <p className="text-gray-600">{review.comment}</p>
               </div>
@@ -140,7 +133,6 @@ function ProductDetails() {
         )}
       </div>
 
-      {/* Add Review Section */}
       {currentUser && (
         <div className="mt-8">
           <h3 className="text-2xl font-bold text-gray-800 mb-4">Add a Review</h3>
@@ -178,7 +170,7 @@ function ProductDetails() {
             </div>
             <button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg"
+              className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg"
             >
               Submit Review
             </button>

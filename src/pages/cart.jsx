@@ -30,36 +30,38 @@ function Cart({ searchTerm }) {
   };
 
   useEffect(() => {
-      if(searchTerm) {
-      navigate(`../search?term=${encodeURIComponent(searchTerm)}`)
-      }
+    if (searchTerm) {
+      navigate(`../search?term=${encodeURIComponent(searchTerm)}`);
+    }
   }, [searchTerm]);
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h2 className="text-4xl font-extrabold text-gray-800 mb-8">Shopping Cart</h2>
+      <h2 className="text-4xl font-extrabold text-gray-800 mb-8 text-center sm:text-left">
+        Shopping Cart
+      </h2>
       {cart.length > 0 ? (
         <div>
-          <div className="space-y-4">
+          <div className="space-y-4 h-full">
             {cart.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center bg-white shadow-md rounded-lg overflow-hidden border hover:shadow-lg transition-shadow"
+                className="flex flex-row items-center bg-white shadow-md rounded-lg overflow-hidden border hover:shadow-lg transition-shadow"
               >
                 {/* Thumbnail */}
                 <img
                   src={item.thumbnail}
                   alt={item.title}
-                  className="w-36 h-36 object-cover"
+                  className="sm:w-48 w-36 h-36 sm:h-fit object-cover"
                 />
 
                 {/* Product Info */}
-                <div className="flex-1 p-4">
-                  <h3 className="text-xl font-bold text-gray-800">{item.title}</h3>
+                <div className="flex-1 p-4 text-left">
+                  <h3 className="text-base sm:text-lg font-bold text-gray-800">{item.title}</h3>
                   <p className="text-gray-600 mt-2">
                     Price: <span className="font-semibold">${item.price}</span>
                   </p>
-                  <div className="flex items-center mt-4">
+                  <div className="flex items-center justify-center sm:justify-start mt-4">
                     <label
                       htmlFor={`quantity-${item.id}`}
                       className="mr-2 text-gray-600 font-medium"
@@ -69,7 +71,7 @@ function Cart({ searchTerm }) {
                     <div className="flex items-center">
                       <button
                         onClick={() => handleDecrement(item.id)}
-                        className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-1 px-3 rounded-l"
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-70 font-bold py-1 px-3 rounded-l"
                       >
                         -
                       </button>
@@ -79,12 +81,9 @@ function Cart({ searchTerm }) {
                         min="1"
                         value={item.quantity}
                         onChange={(e) =>
-                          handleQuantityChange(
-                            item.id,
-                            parseInt(e.target.value, 10)
-                          )
+                          handleQuantityChange(item.id, parseInt(e.target.value, 10))
                         }
-                        className="w-16 border p-1 text-center rounded"
+                        className="w-6 sm:w-10 border p-1 text-center rounded"
                       />
                       <button
                         onClick={() => handleIncrement(item.id)}
@@ -94,12 +93,20 @@ function Cart({ searchTerm }) {
                       </button>
                     </div>
                   </div>
+
+                  {/* Remove Button for Smaller Screens */}
+                  <button
+                    onClick={() => removeFromCart(item.id)}
+                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 w-full rounded transition mt-4 sm:hidden"
+                  >
+                    Remove
+                  </button>
                 </div>
 
                 {/* Remove Button */}
                 <button
                   onClick={() => removeFromCart(item.id)}
-                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition m-4"
+                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition mt-4 sm:mt-0 sm:m-4 hidden sm:block"
                 >
                   Remove
                 </button>
@@ -108,9 +115,11 @@ function Cart({ searchTerm }) {
           </div>
 
           {/* Total Price Section */}
-          <div className="flex justify-between items-center bg-gray-100 p-4 rounded-lg shadow-md mt-8">
+          <div className="flex flex-col sm:flex-row justify-between items-center bg-gray-100 p-4 rounded-lg shadow-md mt-8">
             <h3 className="text-2xl font-bold text-gray-800">Total Price</h3>
-            <p className="text-2xl font-extrabold text-gray-800">${totalPrice.toFixed(2)}</p>
+            <p className="text-2xl font-extrabold text-gray-800 mt-4 sm:mt-0">
+              ${totalPrice.toFixed(2)}
+            </p>
           </div>
 
           {/* Checkout Button */}
@@ -126,7 +135,7 @@ function Cart({ searchTerm }) {
             Your cart is empty. Start shopping now!
           </p>
           <button
-            onClick={() => (navigate('../'))}
+            onClick={() => navigate("../")}
             className="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition"
           >
             Browse Products
