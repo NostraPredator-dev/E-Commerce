@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import { MongoClient } from 'mongodb';
 
 const app = express();
-const port = 5000;
+const port = process.env.port || 5000;
 
 const uri = 'mongodb+srv://hcmcdc6038:Hc6038mc7!@e-commerce.fuuox.mongodb.net/E-CommUserData?retryWrites=true&w=majority&appName=E-Commerce';
 const client = new MongoClient(uri);
