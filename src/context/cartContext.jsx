@@ -12,7 +12,7 @@ export const CartProvider = ({ children }) => {
   const fetchCartFromBackend = async () => {
     if (!currentUser) return;
     try {
-      const response = await axios.get(`http://localhost:5000/cart/${currentUser.email}`);
+      const response = await axios.get(`https://e-commerce-jp45.onrender.com/cart/${currentUser.email}`);
       setCart(response.data.items || []);
     } catch (error) {
       console.error("Error fetching cart from backend:", error);
@@ -22,7 +22,7 @@ export const CartProvider = ({ children }) => {
   const saveCartToBackend = async (updatedCart) => {
     if (!currentUser.email) return;
     try {
-      await axios.post('http://localhost:5000/cart', {
+      await axios.post('https://e-commerce-jp45.onrender.com/cart', {
         email: currentUser.email,
         items: updatedCart,
       });

@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
   const signUp = async ({name, phone, email, password}) => {
     createUserWithEmailAndPassword(auth, email, password);
     try {
-      const response = await axios.post('http://localhost:5000/users', {
+      const response = await axios.post('https://e-commerce-jp45.onrender.com/users', {
         name,
         phone,
         email,

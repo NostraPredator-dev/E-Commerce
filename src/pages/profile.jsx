@@ -14,7 +14,7 @@ function Profile() {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/users/${currentUser.email}`
+          `https://e-commerce-jp45.onrender.com/users/${currentUser.email}`
         );
         setUserData(response.data);
       } catch (err) {
