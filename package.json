@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "node storageService.mjs"
+    "start": "node src/services/storageService.mjs"
   },
   "dependencies": {
     "@babel/runtime": "^7.26.0",
