@@ -19,9 +19,9 @@ export const AuthProvider = ({ children }) => {
     return unsubscribe;
   }, []);
 
-  const signUp = async ({name, phone, email, password}) => {
-    createUserWithEmailAndPassword(auth, email, password);
+  const signUp = async ({ name, phone, email, password }) => {
     try {
+      await createUserWithEmailAndPassword(auth, email, password);
       const response = await axios.post('https://e-commerce-jp45.onrender.com/users', {
         name,
         phone,
@@ -30,16 +30,26 @@ export const AuthProvider = ({ children }) => {
       });
       return response.data;
     } catch (error) {
-      console.error('Error during signup:', error.response?.data || error.message);
-      throw new Error(error.response?.data?.error || 'Signup failed');
+      console.log(error.code)
+      throw new Error(error.code || 'Signup failed');
     }
-  }
-  const logIn = (email, password) => {
-    signInWithEmailAndPassword(auth, email, password);
-  }
-  const logOut = () => {
-    signOut(auth);
-  }
+  };
+
+  const logIn = async (email, password) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      throw new Error(error.code || 'Login failed');
+    }
+  };
+
+  const logOut = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      throw new Error(error.message || 'Logout failed');
+    }
+  };
 
   return (
     <AuthContext.Provider value={{ currentUser, signUp, logIn, logOut }}>

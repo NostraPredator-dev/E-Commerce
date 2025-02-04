@@ -11,14 +11,53 @@ function SignUp() {
   const { signUp } = useAuth();
   const navigate = useNavigate();
 
+  const handleAuthError = (error) => {
+    switch (error.code) {
+      case "auth/invalid-email":
+        setError("Invalid email format. Please enter a valid email address.");
+        break;
+      case "auth/user-not-found":
+        setError("No account found with this email. Please sign up first.");
+        break;
+      case "auth/wrong-password":
+        setError("Incorrect password. Please try again or reset your password.");
+        break;
+      case "auth/email-already-in-use":
+        setError("This email is already in use. Try logging in or using a different email.");
+        break;
+      case "auth/weak-password":
+        setError("Your password is too weak. Please use a stronger password.");
+        break;
+      case "auth/too-many-requests":
+        setError("Too many failed login attempts. Please wait and try again later.");
+        break;
+      case "auth/user-disabled":
+        setError("Your account has been disabled. Contact support for assistance.");
+        break;
+      case "auth/network-request-failed":
+        setError("Network error. Please check your internet connection and try again.");
+        break;
+      case "auth/requires-recent-login":
+        setError("This action requires recent authentication. Please log in again.");
+        break;
+      case "auth/operation-not-allowed":
+        setError("This authentication method is currently disabled. Contact support.");
+        break;
+      default:
+        setError("An unknown error occurred: " + error.message);
+        break;
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setError("");
       await signUp({ name, phone, email, password });
       navigate("/");
-    } catch {
-      setError("Failed to create an account");
+    } catch(e) {
+      e = e.message
+      handleAuthError(e)
     }
   };
 
