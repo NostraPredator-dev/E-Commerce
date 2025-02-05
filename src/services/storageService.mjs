@@ -52,6 +52,43 @@ app.get('/users/:email', async (req, res) => {
   }
 });
 
+//Register a User by Google
+app.post('/googleUsers', async(req, res) => {
+  try {
+    const collection = database.collection('googleUsers');
+    const { name, phone, email } = req.body;
+
+    const existingUser = await collection.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: 'Email already exists' });
+    }
+
+    const newUser = { name, phone, email };    
+    await collection.insertOne(newUser);
+
+    res.status(201).json({ message: 'User registered successfully' });
+  } catch (error) {
+    console.error(error);
+    if (error.code === 11000) {
+      res.status(400).json({ error: 'Email already exists' });
+    } else {
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+});
+
+//Get a user by Google
+app.get('/googleUsers/:email', async (req, res) => {
+  try {
+    const collection = database.collection('googleUsers');
+    const user = await collection.findOne({ email: req.params.email });
+    if (!user) return res.status(404).send('User not found');
+    res.json(user);
+  } catch (error) {
+    res.status(500).send('Server error');
+  }
+});
+
 // Save or Update a Cart
 app.post('/cart', async (req, res) => {
   try {

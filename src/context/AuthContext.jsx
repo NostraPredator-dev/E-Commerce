@@ -1,9 +1,11 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { auth } from '../firebase';
 import { onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import axios from 'axios';
 
 const AuthContext = createContext();
+const googleProvider = new GoogleAuthProvider();
 
 export const useAuth = () => useContext(AuthContext);
 
@@ -35,6 +37,23 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const signInWithGoogle = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const name = result.user.displayName;
+      const email = result.user.email;
+      const phone = result.user.phoneNumber;
+      const postres = await axios.post('https://e-commerce-jp45.onrender.com/googleUsers', {
+        name,
+        phone,
+        email,
+      });
+      console.log("Google Sign-In Response:", postres);
+    } catch (error) {
+      console.log("Google Sign-In Error:", error);
+    }
+  };
+
   const logIn = async (email, password) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
@@ -52,7 +71,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ currentUser, signUp, logIn, logOut }}>
+    <AuthContext.Provider value={{ currentUser, signUp, logIn, signInWithGoogle, logOut }}>
       {!loading && children}
     </AuthContext.Provider>
   );

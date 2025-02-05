@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { FcGoogle } from "react-icons/fc";
 
 function SignUp() {
   const [name, setName] = useState("");
@@ -8,7 +9,7 @@ function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { signUp } = useAuth();
+  const { signUp, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
 
   const handleAuthError = (error) => {
@@ -56,6 +57,17 @@ function SignUp() {
       await signUp({ name, phone, email, password });
       navigate("/");
     } catch(e) {
+      e = e.message
+      handleAuthError(e)
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      setError("");
+      await signInWithGoogle();
+      navigate("/");
+    } catch (e) {
       e = e.message
       handleAuthError(e)
     }
@@ -149,6 +161,14 @@ function SignUp() {
             Sign Up
           </button>
         </form>
+
+        <button
+          onClick={handleGoogleSignIn}
+          className="w-full flex items-center justify-center bg-white border border-gray-300 py-2 sm:py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-200 text-sm sm:text-base text-gray-700"
+        >
+          <FcGoogle className="mr-2 text-lg" /> Sign Up with Google
+        </button>
+
         <div className="mt-6 text-center">
           <p className="text-sm sm:text-base text-gray-600">
             Already have an account?{" "}
