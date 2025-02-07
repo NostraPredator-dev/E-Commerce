@@ -26,8 +26,15 @@ function Header({ onSearch }) {
         );
         setUserData(response.data);
       } catch (err) {
-        console.error("Failed to fetch user data:", err);
-        setError("Failed to load user information. Please try again.");
+        try {
+          const response = await axios.get(
+            `https://e-commerce-jp45.onrender.com/googleUsers/${currentUser.email}`
+          )
+          setUserData(response.data);
+        } catch (err) {
+          console.error("Failed to fetch user data:", err);
+          setError("Failed to load user information. Please try again.");
+        }
       } finally {
         setIsLoading(false);
       }

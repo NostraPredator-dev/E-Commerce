@@ -20,7 +20,7 @@ export const CartProvider = ({ children }) => {
   };
 
   const saveCartToBackend = async (updatedCart) => {
-    if (!currentUser.email) return;
+    if (!currentUser) return;
     try {
       await axios.post('https://e-commerce-jp45.onrender.com/cart', {
         email: currentUser.email,
@@ -32,13 +32,10 @@ export const CartProvider = ({ children }) => {
   };
 
   const addToCart = (product) => {
-    const existingProductIndex = cart.findIndex((item) => item.id === product.id);
+    const updatedProduct = product ? { ...product, quantity: product.quantity ?? 1 } : [];
 
-    if (existingProductIndex !== -1) {
-      return;
-    }
+    if (product && cart.some((item) => item.id === product.id)) return;
 
-    const updatedProduct = { ...product, quantity: 1 };
     const updatedCart = [...cart, updatedProduct];
     setCart(updatedCart);
     saveCartToBackend(updatedCart);

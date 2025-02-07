@@ -18,7 +18,14 @@ function Profile() {
         );
         setUserData(response.data);
       } catch (err) {
-        setError("Failed to fetch user data.");
+        try {
+          const response = await axios.get(
+            `https://e-commerce-jp45.onrender.com/googleUsers/${currentUser.email}`
+          );
+          setUserData(response.data);
+        } catch (err) {
+          setError("Failed to fetch user data.");
+        }
       } finally {
         setLoading(false);
       }

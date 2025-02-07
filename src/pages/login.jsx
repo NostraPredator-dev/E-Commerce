@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { FcGoogle } from "react-icons/fc";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { logIn } = useAuth();
+  const { logIn, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
 
   const handleAuthError = (error) => {
@@ -56,6 +57,17 @@ function Login() {
     } catch(e) {
       e = e.message
       handleAuthError(e);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      setError("");
+      await signInWithGoogle();     
+      navigate("/");
+    } catch (e) {
+      e = e.message
+      handleAuthError(e)
     }
   };
 
@@ -115,6 +127,14 @@ function Login() {
             Log In
           </button>
         </form>
+
+        <button
+          onClick={handleGoogleSignIn}
+          className="w-full flex items-center justify-center gap-2 mt-3 bg-white border border-gray-300 py-2 sm:py-3 rounded-lg font-semibold text-gray-700 hover:bg-gray-100 transition duration-200 text-sm sm:text-base shadow-sm active:scale-95"
+        >
+          <FcGoogle className="text-xl sm:text-2xl" /> Google
+        </button>
+
         <div className="mt-6 text-center">
           <p className="text-sm sm:text-base text-gray-600">
             Don't have an account?{" "}

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { CartContext } from "../context/cartContext";
 import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 
@@ -10,6 +11,7 @@ function SignUp() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const { signUp, signInWithGoogle } = useAuth();
+  const { addToCart } = useContext(CartContext);
   const navigate = useNavigate();
 
   const handleAuthError = (error) => {
@@ -55,6 +57,7 @@ function SignUp() {
     try {
       setError("");
       await signUp({ name, phone, email, password });
+      addToCart(undefined);
       navigate("/");
     } catch(e) {
       e = e.message
@@ -66,6 +69,7 @@ function SignUp() {
     try {
       setError("");
       await signInWithGoogle();
+      addToCart(undefined);     
       navigate("/");
     } catch (e) {
       e = e.message
@@ -164,9 +168,9 @@ function SignUp() {
 
         <button
           onClick={handleGoogleSignIn}
-          className="w-full flex items-center justify-center bg-white border border-gray-300 py-2 sm:py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-200 text-sm sm:text-base text-gray-700"
+          className="w-full flex items-center justify-center gap-2 mt-3 bg-white border border-gray-300 py-2 sm:py-3 rounded-lg font-semibold text-gray-700 hover:bg-gray-100 transition duration-200 text-sm sm:text-base shadow-sm active:scale-95"
         >
-          <FcGoogle className="mr-2 text-lg" /> Sign Up with Google
+          <FcGoogle className="text-xl sm:text-2xl" /> Google
         </button>
 
         <div className="mt-6 text-center">

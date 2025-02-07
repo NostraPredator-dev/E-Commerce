@@ -12,6 +12,11 @@ const client = new MongoClient(uri);
 app.use(cors());
 app.use(express.json());
 
+app.use((req, res, next) => {
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
+  next();
+});
+
 // Connect to MongoDB
 await client.connect()
   .then(() => console.log('Connected to MongoDB'))
@@ -58,11 +63,6 @@ app.post('/googleUsers', async(req, res) => {
     const collection = database.collection('googleUsers');
     const { name, phone, email } = req.body;
 
-    const existingUser = await collection.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ error: 'Email already exists' });
-    }
-
     const newUser = { name, phone, email };    
     await collection.insertOne(newUser);
 
@@ -100,6 +100,11 @@ app.post('/cart', async (req, res) => {
       { $set: { email, items } },
       { upsert: true, returnDocument: 'after' }
     );
+
+    let result = cart.value;
+    if (!result) {
+      result = await collection.findOne({ email });
+    }
 
     res.status(200).json({ message: 'Cart saved successfully', cart });
   } catch (error) {

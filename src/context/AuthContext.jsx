@@ -40,20 +40,43 @@ export const AuthProvider = ({ children }) => {
   const signInWithGoogle = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
+  
+      if (!result || !result.user) {
+        throw new Error("Google sign-in was not completed.");
+      }
+  
       const name = result.user.displayName;
       const email = result.user.email;
       const phone = result.user.phoneNumber;
-      const postres = await axios.post('https://e-commerce-jp45.onrender.com/googleUsers', {
-        name,
-        phone,
-        email,
-      });
-      console.log("Google Sign-In Response:", postres);
+  
+      let userExists = false;
+  
+      try {
+        const getUserResponse = await axios.get(`https://e-commerce-jp45.onrender.com/googleUsers/${email}`);
+        if (getUserResponse.data) {
+          userExists = true;
+        }
+      } catch (getError) {
+        if (getError.response && getError.response.status !== 404) {
+          console.error("Unexpected error checking user:", getError);
+        }
+      }
+  
+      if (!userExists) {
+        await axios.post("https://e-commerce-jp45.onrender.com/googleUsers", { name, phone, email });
+      }
     } catch (error) {
-      console.log("Google Sign-In Error:", error);
+      if (error.code === "auth/popup-closed-by-user") {
+        console.warn("Google Sign-In was closed before completion.");
+      } else if (error.code === "auth/cancelled-popup-request") {
+        console.warn("Multiple sign-in requests detected. Only one is allowed.");
+      } else {
+        console.error("Google Sign-In Error:", error);
+      }
     }
   };
-
+  
+  
   const logIn = async (email, password) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
