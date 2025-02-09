@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/cartContext";
 import axios from "axios";
@@ -14,6 +14,7 @@ function Header({ onSearch }) {
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -46,6 +47,7 @@ function Header({ onSearch }) {
   const handleLogOut = async () => {
     try {
       await logOut();
+      navigate("/");
     } catch (error) {
       console.error("Failed to log out:", error);
     }

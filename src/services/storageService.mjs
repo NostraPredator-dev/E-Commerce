@@ -28,20 +28,38 @@ const database = client.db('E-CommUserData');
 app.post('/users', async (req, res) => {
   try {
     const collection = database.collection('users');
-    const { name, phone, email, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = { name, phone, email, password: hashedPassword };
+    const { name, phone, email, password, provider, googleId } = req.body;
+
+    if (!provider || !['email', 'google'].includes(provider)) {
+      return res.status(400).json({ error: 'Invalid provider' });
+    }
+
+    // Check if user with the same email and provider already exists
+    const existingUser = await collection.findOne({ email, provider });
+
+    if (existingUser) {
+      return res.status(400).json({ error: 'User already exists with this email and provider' });
+    }
+
+    let newUser = { name, phone, email, provider, createdAt: new Date() };
+
+    if (provider === 'email') {
+      if (!password) return res.status(400).json({ error: 'Password is required for email sign-up' });
+
+      newUser.password = await bcrypt.hash(password, 10);
+    } else if (provider === 'google') {
+      if (!googleId) return res.status(400).json({ error: 'Google ID is required for Google sign-in' });
+
+      newUser.googleId = googleId;
+    }
 
     await collection.insertOne(newUser);
 
-    res.status(201).json({ message: 'User registered successfully' });
+    console.log(res.status(201).json({ message: 'User registered successfully', user: { email, provider } }));
   } catch (error) {
     console.error(error);
-    if (error.code === 11000) {
-      res.status(400).json({ error: 'Email already exists' });
-    } else {
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
+
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
@@ -49,38 +67,6 @@ app.post('/users', async (req, res) => {
 app.get('/users/:email', async (req, res) => {
   try {
     const collection = database.collection('users');
-    const user = await collection.findOne({ email: req.params.email });
-    if (!user) return res.status(404).send('User not found');
-    res.json(user);
-  } catch (error) {
-    res.status(500).send('Server error');
-  }
-});
-
-//Register a User by Google
-app.post('/googleUsers', async(req, res) => {
-  try {
-    const collection = database.collection('googleUsers');
-    const { name, phone, email } = req.body;
-
-    const newUser = { name, phone, email };    
-    await collection.insertOne(newUser);
-
-    res.status(201).json({ message: 'User registered successfully' });
-  } catch (error) {
-    console.error(error);
-    if (error.code === 11000) {
-      res.status(400).json({ error: 'Email already exists' });
-    } else {
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  }
-});
-
-//Get a user by Google
-app.get('/googleUsers/:email', async (req, res) => {
-  try {
-    const collection = database.collection('googleUsers');
     const user = await collection.findOne({ email: req.params.email });
     if (!user) return res.status(404).send('User not found');
     res.json(user);

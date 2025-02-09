@@ -29,10 +29,10 @@ export const AuthProvider = ({ children }) => {
         phone,
         email,
         password,
+        provider: 'email',
       });
       return response.data;
     } catch (error) {
-      console.log(error.code)
       throw new Error(error.code || 'Signup failed');
     }
   };
@@ -48,11 +48,12 @@ export const AuthProvider = ({ children }) => {
       const name = result.user.displayName;
       const email = result.user.email;
       const phone = result.user.phoneNumber;
+      const googleId = result.user.uid;
   
       let userExists = false;
   
       try {
-        const getUserResponse = await axios.get(`https://e-commerce-jp45.onrender.com/googleUsers/${email}`);
+        const getUserResponse = await axios.get(`https://e-commerce-jp45.onrender.com/users/${email}`);
         if (getUserResponse.data) {
           userExists = true;
         }
@@ -63,7 +64,7 @@ export const AuthProvider = ({ children }) => {
       }
   
       if (!userExists) {
-        await axios.post("https://e-commerce-jp45.onrender.com/googleUsers", { name, phone, email });
+        await axios.post("https://e-commerce-jp45.onrender.com/users", { name, phone, email, provider: "google", googleId });
       }
     } catch (error) {
       if (error.code === "auth/popup-closed-by-user") {

@@ -15,7 +15,7 @@ function SignUp() {
   const navigate = useNavigate();
 
   const handleAuthError = (error) => {
-    switch (error.code) {
+    switch (error) {
       case "auth/invalid-email":
         setError("Invalid email format. Please enter a valid email address.");
         break;
